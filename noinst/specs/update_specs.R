@@ -42,12 +42,15 @@ SPECS <- as_tibble(SPECS)
 # 4 composite.ratioplotindsa   ir2   composite FALSE   TRUE      ""
 # 5 composite.ratioplotorig    ir1   composite FALSE   TRUE      ""
 
-tbl_txt <-
+specs_save_series <-
   SPECS |>
   filter(
     is.series == TRUE,
     is.save == TRUE
-  ) |>
+  )
+
+tbl_txt <-
+  specs_save_series |>
   select(spec, long, short, description) |>
   transmute(new = paste("#'", spec, "\\tab", long, "\\tab", short, "\\tab", description, "\\cr")) |>
   pull(new)
@@ -61,3 +64,11 @@ txt_new <-
 
 
 write_lines(txt_new, "R/series.R")
+
+
+series_list <- as.list(
+  specs_save_series$long
+) |>
+  setNames(nm = _)
+
+usethis::use_data(series_list)
